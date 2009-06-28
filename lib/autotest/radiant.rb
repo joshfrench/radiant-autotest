@@ -1,5 +1,4 @@
 require 'autotest/rspec'
-require 'autotest/radiant/growl'
 
 Autotest.add_hook :initialize do |at|
   extension = Dir.pwd.split('/').last
@@ -51,5 +50,8 @@ Autotest.add_hook :initialize do |at|
 end
 
 class Autotest::Radiant < Autotest::Rspec
-
+  def initialize
+    super
+    @count_re = /(\d+) examples?, (\d+) failures?(?:, (\d+) pending)?/
+  end
 end

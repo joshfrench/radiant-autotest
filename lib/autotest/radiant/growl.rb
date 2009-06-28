@@ -4,11 +4,6 @@ class Autotest::Radiant < Autotest::Rspec
   attr_reader :count_re
   attr_writer :examples_total, :examples_failed, :examples_pending
 
-  def initialize
-    super
-    @count_re = /(\d+) examples?, (\d+) failures?(?:, (\d+) pending)?/
-  end
-
   def success_count
     examples_total - examples_pending - examples_failed
   end
