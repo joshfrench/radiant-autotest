@@ -13,11 +13,11 @@ class Autotest::Radiant < Autotest::Rspec
   end
 
   def pass_img
-    File.expand_path(File.join %w(lib autotest pass.png))
+    File.expand_path(File.join __FILE__, %w(.. .. .. pass.png))
   end
 
   def fail_img
-    File.expand_path(File.join(%w(lib autotest fail.png)))
+    File.expand_path(File.join __FILE__, %w(.. .. .. fail.png))
   end
 
   %w(examples_total examples_failed examples_pending).each do |attr|
@@ -29,23 +29,27 @@ class Autotest::Radiant < Autotest::Rspec
   end
 end
 
+def spec_string(n=1)
+  1 == n ? "#{n} spec" : "#{n} specs"
+end
+
 Autotest.add_hook :ran_command do |at|
   at.results.grep at.count_re
   at.examples_total, at.examples_failed, at.examples_pending = $1.to_i, $2.to_i, $3.to_i
 end
 
 Autotest.add_hook :red do |at|
-  at.growl "Failure", "#{at.files_to_test.size} #{at.files_to_test.size > 1 ? 'specs' : 'spec'} failed", at.fail_img, 2
+  at.growl "Failure", "#{spec_string at.examples_failed} failed", at.fail_img, 2
 end
 
 Autotest.add_hook :green do |at|
-  msg = "#{at.success_count} specs passed"
+  msg = "#{spec_string at.success_count} passed"
   msg += ", #{at.examples_pending} pending" if at.examples_pending > 0
   at.growl "Success", msg, at.pass_img, -2 if at.tainted
 end
 
 Autotest.add_hook :all_good do |at|
-  msg = "#{at.success_count} specs passed"
+  msg = "#{spec_string at.success_count} passed"
   msg += ", #{at.examples_pending} pending" if at.examples_pending > 0
   at.growl "Success", msg, at.pass_img, -2 if at.tainted
 end
