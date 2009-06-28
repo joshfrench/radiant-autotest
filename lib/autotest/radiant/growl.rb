@@ -13,11 +13,13 @@ class Autotest::Radiant < Autotest::Rspec
   end
 
   def pass_img
-    File.expand_path(File.join __FILE__, %w(.. .. .. pass.png))
+    local = File.expand_path(File.join(Dir.pwd, %w(lib pass.png)))
+    File.exists?(local) ? local : File.expand_path(File.join(__FILE__, %w(.. .. .. pass.png)))
   end
 
   def fail_img
-    File.expand_path(File.join __FILE__, %w(.. .. .. fail.png))
+    local = File.expand_path(File.join(Dir.pwd, %w(lib fail.png)))
+    File.exists?(local) ? local : File.expand_path(File.join(__FILE__, %w(.. .. .. fail.png)))
   end
 
   %w(examples_total examples_failed examples_pending).each do |attr|
