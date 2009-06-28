@@ -49,19 +49,34 @@ Autotest.add_hook :initialize do |at|
   end
 end
 
+# Although not declared as readable attributes, the examples_total,
+# examples_failed, and examples_pending counts are available on the instance.
+# This may be useful if you're implementing new notifications:
+#
+#   Autotest.add_hook :ran_command do |at|
+#     logger.info "You have #{at.examples_pending} specs pending!"
+#   end
+#
+# Conscientious grammarians may wish to use the pluralization helper:
+#
+#  Autotest.add_hook :waiting do |at|
+#    logger.info "You have #{spec_string at.examples_pending} pending!"
+#  end
 class Autotest::Radiant < Autotest::Rspec
   attr_reader :count_re
   attr_writer :examples_total, :examples_failed, :examples_pending
 
-  def initialize
+  def initialize #:nodoc:
     super
     @count_re = /(\d+) examples?, (\d+) failures?(?:, (\d+) pending)?/
   end
 
+  # Return the number of passing specs, not including pending.
   def success_count
     examples_total - examples_pending - examples_failed
   end
 
+  # Attr readers with special sauce to ensure initialization as integers.
   %w(examples_total examples_failed examples_pending).each do |attr|
     class_eval <<-EOS, __FILE__, __LINE__
       def #{attr}             # def examples_total
@@ -77,6 +92,8 @@ Autotest.add_hook :ran_command do |at|
   at.examples_total, at.examples_failed, at.examples_pending = $1.to_i, $2.to_i, $3.to_i
 end
 
+# Cheapie pluralization helper for use in notifications.
+# Returns 'spec' or 'specs' based on the value of +n+.
 def spec_string(n=1)
   1 == n ? "#{n} spec" : "#{n} specs"
 end
