@@ -28,17 +28,17 @@ class Autotest::Radiant < Autotest::Rspec
 end
 
 Autotest.add_hook :red do |at|
-  at.growl "Failure", "#{spec_string at.examples_failed} failed", at.fail_img, 2
+  at.growl "Failure", "#{at.spec_string at.examples_failed} failed", at.fail_img, 2
 end
 
 Autotest.add_hook :green do |at|
-  msg = "#{spec_string at.success_count} passed"
+  msg = "#{at.spec_string at.success_count} passed"
   msg += ", #{at.examples_pending} pending" if at.examples_pending > 0
   at.growl "Success", msg, at.pass_img, -2 if at.tainted
 end
 
 Autotest.add_hook :all_good do |at|
-  msg = "#{spec_string at.success_count} passed"
+  msg = "#{at.spec_string at.success_count} passed"
   msg += ", #{at.examples_pending} pending" if at.examples_pending > 0
   at.growl "Success", msg, at.pass_img, -2 if at.tainted
 end

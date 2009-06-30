@@ -1,8 +1,6 @@
 require 'autotest/rspec'
 
 Autotest.add_hook :initialize do |at|
-  extension = Dir.pwd.split('/').last
-
   at.clear_mappings
   at.add_exception(%r%^\.\/(?:cache|db|doc|log|public|script|tmp|vendor)%)
 
@@ -14,12 +12,12 @@ Autotest.add_hook :initialize do |at|
     at.files_matching %r%^spec/(controllers|helpers|lib|models|views)/.*_spec%
   end
 
-  at.add_mapping(%r%^#{extension}_extension\.rb%) do
+  at.add_mapping(%r%^#{at.extension_name}_extension\.rb%) do |f,m|
     at.files_matching %r%^spec/(controllers|helpers|lib|models|views)/.*_spec%
   end
 
   at.add_mapping(%r%^app/controllers/(.*)\.rb$%) do |_,match|
-    if match[1] == "#{extension}_controller"
+    if match[1] == "#{at.extension_name}_controller"
       at.files_matching %r%^spec/controllers/.*_spec\.rb$%
     else
       ["spec/controllers/#{match[1]}_spec.rb"]
@@ -27,7 +25,7 @@ Autotest.add_hook :initialize do |at|
   end
 
   at.add_mapping(%r%^app/helpers/(.*)_helper.rb%) do |_,match|
-    if match[1] == extension
+    if match[1] == at.extension_name
       at.files_matching %r%^spec/(helpers|views)/.*_spec\.rb$%
     else
       ["spec/controllers/#{match[1]}_controller_spec.rb",
@@ -49,6 +47,11 @@ Autotest.add_hook :initialize do |at|
   end
 end
 
+Autotest.add_hook :ran_command do |at|
+  at.results.grep at.count_re
+  at.examples_total, at.examples_failed, at.examples_pending = $1.to_i, $2.to_i, $3.to_i
+end
+
 # Although not declared as readable attributes, the examples_total,
 # examples_failed, and examples_pending counts are available on the instance.
 # This may be useful if you're implementing new notifications:
@@ -60,7 +63,7 @@ end
 # Conscientious grammarians may wish to use the pluralization helper:
 #
 #  Autotest.add_hook :waiting do |at|
-#    logger.info "You have #{spec_string at.examples_pending} pending!"
+#    logger.info "You have #{at.spec_string at.examples_pending} pending!"
 #  end
 class Autotest::Radiant < Autotest::Rspec
   attr_reader :count_re
@@ -85,15 +88,14 @@ class Autotest::Radiant < Autotest::Rspec
     EOS
   end
 
-end
+  def extension_name
+    Dir.pwd.split('/').last
+  end
 
-Autotest.add_hook :ran_command do |at|
-  at.results.grep at.count_re
-  at.examples_total, at.examples_failed, at.examples_pending = $1.to_i, $2.to_i, $3.to_i
-end
+  # Cheapie pluralization helper for use in notifications.
+  # Returns 'spec' or 'specs' based on the value of +n+.
+  def spec_string(n=1)
+    1 == n ? "#{n} spec" : "#{n} specs"
+  end
 
-# Cheapie pluralization helper for use in notifications.
-# Returns 'spec' or 'specs' based on the value of +n+.
-def spec_string(n=1)
-  1 == n ? "#{n} spec" : "#{n} specs"
 end
