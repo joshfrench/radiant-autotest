@@ -9,10 +9,13 @@ Includes Growl support, with delightful icons.
   $ cd vendor/extensions/your_extension
   $ autotest
 
-If you'd like to enable Growl notifications, create a file
-named .autotest in vendor/extensions/your_extension and add this line:
+If you have Growl and the growlnotify binary installed, you can enable Growl
+notifications. To do so, create a file named .autotest in 
+vendor/extensions/your_extension and add this line:
 
   require 'autotest/radiant/growl'
+  
+Growl can be downloaded from http://growl.info and includes growlnotify.
 
 The gem provides two delightful icons to be displayed with your pass/fail
 counts. If you would like to replace these with your own less delightful
@@ -25,4 +28,4 @@ Happy testing!
 
 Copyright (c) 2009 Josh French. See LICENSE for details.
 
-Delightful icons from http://iconbuffet.com.
+Delightful icon design by IconBuffet: http://iconbuffet.com.
