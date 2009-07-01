@@ -6,8 +6,10 @@ Gem::Specification.new do |s|
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Josh French"]
-  s.date = %q{2009-06-28}
-  s.email = %q{josh@vitamin-j.com}
+  s.date = %q{2009-07-01}
+  s.email = %q{josh@digitalpulp.com}
+  s.summary = "Autotest runner for Radiant extensions"
+  s.description = "Autotest runner for Radiant extensions"
   s.extra_rdoc_files = [
     "LICENSE",
      "README.rdoc"
@@ -19,17 +21,23 @@ Gem::Specification.new do |s|
      "README.rdoc",
      "Rakefile",
      "VERSION",
-     "test/radiant-autotest_test.rb",
-     "test/test_helper.rb"
+     "lib/autotest/discover.rb",
+     "lib/autotest/radiant.rb",
+     "lib/autotest/radiant/growl.rb",
+     "lib/fail.png",
+     "lib/pass.png",
+     "radiant-autotest.gemspec",
+     "spec/lib/radiant_autotest_spec.rb",
+     "spec/matchers/autotest_matchers.rb"
   ]
   s.homepage = %q{http://github.com/jfrench/radiant-autotest}
   s.rdoc_options = ["--charset=UTF-8"]
   s.require_paths = ["lib"]
-  s.rubygems_version = %q{1.3.4}
+  s.rubygems_version = %q{1.3.3}
   s.summary = %q{Autotest mappings for Radiant extensions}
   s.test_files = [
-    "test/radiant-autotest_test.rb",
-     "test/test_helper.rb"
+    "spec/lib/radiant_autotest_spec.rb",
+     "spec/matchers/autotest_matchers.rb"
   ]
   s.add_dependency 'ZenTest', '>= 3.9.0'
   s.add_dependency 'rspec' # version mainly dependent on Radiant
