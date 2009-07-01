@@ -31,6 +31,8 @@ Gem::Specification.new do |s|
     "test/radiant-autotest_test.rb",
      "test/test_helper.rb"
   ]
+  s.add_dependency 'ZenTest', '>= 3.9.0'
+  s.add_dependency 'rspec' # version mainly dependent on Radiant
 
   if s.respond_to? :specification_version then
     current_version = Gem::Specification::CURRENT_SPECIFICATION_VERSION
